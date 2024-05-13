@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Build and Deploy
 
 on:
   push:
@@ -21,16 +21,14 @@ jobs:
       - name: Install Expo CLI
         run: npm install -g expo-cli
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Login to Expo
+        run: expo login -u ${{ secrets.EXPO_CLI_USERNAME }} -p ${{ secrets.EXPO_CLI_PASSWORD }}
 
-      - name: Build and Deploy
-        run: |
-          expo login -u $EXPO_CLI_USERNAME -p $EXPO_CLI_PASSWORD
-          expo build:android --non-interactive
+      - name: Build Android APK
+        run: expo build:android --non-interactive
 
-      - name: Upload APK Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: android-build
-          path: ./android/app/build/outputs/apk/release/*.apk
+          path: path/to/your/apk/*.apk
