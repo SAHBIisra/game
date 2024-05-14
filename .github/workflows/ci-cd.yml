@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Android CI/CD Pipeline
 
 on:
   push:
@@ -10,28 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: 14
 
-      - name: Install Expo CLI
-        run: npm install --global expo-cli
-
-      - name: Login to Expo
-        run: expo login -u ${{ secrets.EXPO_CLI_USERNAME }} -p ${{ secrets.EXPO_CLI_PASSWORD }}
-
-      - name: Install project dependencies
+      - name: Install dependencies
         run: npm install
 
       - name: Build Android APK
-        run: npx eas build --platform android
+        run: npx react-native run-android --variant=release
 
-      - name: Upload Artifact
+      - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: android-build
-          path: <path/to/your/apk/*.apk>
+          name: app-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
